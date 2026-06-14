@@ -1,4 +1,4 @@
-namespace Api.Models;
+namespace Api.Models.Utils;
 
 public class Response<T> where T : class
 {

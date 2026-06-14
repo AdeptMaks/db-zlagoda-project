@@ -16,7 +16,7 @@ builder.Services.AddControllers()
 
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateEmployeeRequestValidator>();
-builder.Services.AddOptions()
+builder.Services.AddOptions();
 
 var app = builder.Build();
 
@@ -28,6 +28,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
 

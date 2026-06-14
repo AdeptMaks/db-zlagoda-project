@@ -37,7 +37,7 @@ public class CreateEmployeeRequestValidator : AbstractValidator<CreateEmployeeRe
 
         When(x => x.AddressInfo != null, () =>
         {
-            RuleFor(x => x.AddressInfo)
+            RuleFor(x => x.AddressInfo!)
                 .SetValidator(new AddressValidator());
         });
 

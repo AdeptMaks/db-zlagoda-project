@@ -1,36 +1,28 @@
+using System.ComponentModel.DataAnnotations;
+using Api.Features.Shared;
 using Api.Interfaces.Auth;
 using Api.Interfaces.Utils;
-using Api.Models;
+using Api.Models.Utils;
 
 namespace Api.Features.Auth;
 
-public class AuthService(ICreateEmployeeRepository employeeRepository, IGenerateJWT generator) : IAuthService
+public class AuthService(IGenerateJWT generator) : IAuthService
 {
-    public async Task<Response<string>> CreateEmployee(CreateEmployeeRequest input)
+    public async Task<Response<string>> RegisterEmployee(CreateEmployeeRequest input)
     {
-        var role = GetRole(input.EmployeeRole);
-        if (string.IsNullOrWhiteSpace(role))
-        {
-            return Response<string>.Failure(new()
-            {
-                ["role"] = ["Role is out of available range of values"]
-            });
-        }
-
-        var result = await employeeRepository.CreateEmployee(input, role);
-
-        var token = generator.Generate(input);
+        var token = generator.Generate(input.Username, input.EmployeeRole);
 
         return Response<string>.Success(token);
     }
 
-    private static string GetRole(EmpoloyeeRole role)
+    public async Task<Response<string>> AuthorizeEmployee(LoginRequest input)
     {
-        return role switch
-        {
-            EmpoloyeeRole.Cachier => "cachier",
-            EmpoloyeeRole.Manager => "manager",
-            _ => ""
-        };
+        // validation logic
+        // we need to validate password and login and then return jwt token with role taken from the db
+
+        var role = EmpoloyeeRole.Cachier;
+        var token = generator.Generate(input.Username, role);
+
+        return Response<string>.Success(token);
     }
 }

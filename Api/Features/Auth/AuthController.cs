@@ -19,7 +19,7 @@ public class AuthController : ControllerBase
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var response = await authService.CreateEmployee(request);
+        var response = await authService.RegisterEmployee(request);
 
         if (response.IsFailure)
             return BadRequest(response.Errors);
@@ -37,7 +37,7 @@ public class AuthController : ControllerBase
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        // TODO: should be jwt here
+
         return Ok("");
     }
 }

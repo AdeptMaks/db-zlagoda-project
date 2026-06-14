@@ -1,9 +1,8 @@
-using System.Runtime.InteropServices;
-using Api.Features.Auth;
+using Api.Features.Shared;
 
 namespace Api.Interfaces.Utils;
 
 public interface IGenerateJWT
 {
-    string Generate(CreateEmployeeRequest input);
+    string Generate(string username, EmpoloyeeRole empoloyeeRole);
 }

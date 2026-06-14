@@ -1,3 +1,7 @@
+using Api.Models.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
 namespace Api.Configuration;
 
 public static class AuthExtensions

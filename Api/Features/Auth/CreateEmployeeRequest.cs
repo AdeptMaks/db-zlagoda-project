@@ -1,3 +1,5 @@
+using Api.Features.Shared;
+
 namespace Api.Features.Auth;
 
 public class CreateEmployeeRequest
@@ -15,11 +17,6 @@ public class CreateEmployeeRequest
     public Address? AddressInfo { get; set; }
 }
 
-public enum EmpoloyeeRole
-{
-    Cachier,
-    Manager
-}
 
 public class Address
 {
