@@ -28,7 +28,6 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateEmployeeRequestValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<AddressValidator>();
 builder.Services.AddOptions();
 
 

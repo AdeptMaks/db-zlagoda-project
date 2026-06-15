@@ -1,13 +1,11 @@
-namespace Api.Data.Entities;
+namespace Api.Features.Employees;
 
-public class EmployeeEntity
+public class EmployeeResponse
 {
     public string EmployeeId { get; set; } = "";
     public string EmployeeRole { get; set; } = "";
     public string Surname { get; set; } = "";
     public string Firstname { get; set; } = "";
-    public string Username { get; set; } = "";
-    public string Password { get; set; } = "";
     public string? Patronymic { get; set; }
     public decimal Salary { get; set; }
     public DateTime StartDate { get; set; }

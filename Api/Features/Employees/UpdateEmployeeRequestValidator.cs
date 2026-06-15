@@ -1,11 +1,11 @@
 using Api.Features.Shared;
 using FluentValidation;
 
-namespace Api.Features.Auth;
+namespace Api.Features.Employees;
 
-public class CreateEmployeeRequestValidator : AbstractValidator<CreateEmployeeRequest>
+public class UpdateEmployeeRequestValidator : AbstractValidator<UpdateEmployeeRequest>
 {
-    public CreateEmployeeRequestValidator()
+    public UpdateEmployeeRequestValidator()
     {
         RuleFor(x => x.BirthDate)
             .Must(IsValidBirthDate).WithMessage("Employee should be at least 18 years old");
@@ -39,12 +39,6 @@ public class CreateEmployeeRequestValidator : AbstractValidator<CreateEmployeeRe
         {
             RuleFor(x => x.AddressInfo!).SetValidator(new AddressValidator());
         });
-
-        RuleFor(x => x.Username)
-            .Length(10, 30).WithMessage("Username should be between 10 and 30 characters");
-
-        RuleFor(x => x.Password)
-            .Length(10, 20).WithMessage("Password should be between 10 and 20 characters");
     }
 
     private static bool IsValidBirthDate(DateTime birthDate) => DateTime.Today.AddYears(-18) >= birthDate.Date;

@@ -11,6 +11,8 @@ public class Init : Migration
     {
         Create.Table("employee")
             .WithColumn("id_employee").AsString(10).PrimaryKey()
+            .WithColumn("username").AsString(30).NotNullable().Unique()
+            .WithColumn("password").AsString(100).NotNullable()
             .WithColumn("empl_surname").AsString(50).NotNullable()
             .WithColumn("empl_name").AsString(50).NotNullable()
             .WithColumn("empl_patronymic").AsString(50).Nullable()
