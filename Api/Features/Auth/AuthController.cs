@@ -1,6 +1,6 @@
-using System.Runtime.CompilerServices;
 using Api.Interfaces.Auth;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Features.Auth;
@@ -39,5 +39,13 @@ public class AuthController : ControllerBase
 
 
         return Ok("");
+    }
+
+    [HttpGet]
+    [Route("employee/test")]
+    [Authorize]
+    public async Task<IActionResult> Test()
+    {
+        return Ok("Success");
     }
 }
