@@ -11,14 +11,13 @@ import { statisticsApi } from '@/api/statistics'
 import { employeesApi } from '@/api/employees'
 import { categoriesApi } from '@/api/categories'
 import { describeError } from '@/utils/apiError'
-import type { CategoryBuyer, Category, Employee, ProductRevenue } from '@/types'
+import type { CategoryBuyer, CategoryRevenue, CashierPromo, Category, Employee, ProductRevenue } from '@/types'
 
 const toast = useToast()
 
 const cashiers = ref<Employee[]>([])
 const categories = ref<Category[]>([])
 
-// ---- Запит 1: виторг за товарами (групування, параметричний) ----
 const employeeId = ref<string | null>(null)
 const from = ref<Date | null>(null)
 const to = ref<Date | null>(null)
@@ -45,7 +44,6 @@ async function runRevenue() {
   }
 }
 
-// ---- Запит 2: клієнти, що купили всі товари категорії (подвійне заперечення) ----
 const categoryNumber = ref<number | null>(null)
 const buyers = ref<CategoryBuyer[]>([])
 const loadingBuyers = ref(false)
@@ -67,14 +65,51 @@ async function runBuyers() {
   }
 }
 
+const catFrom = ref<Date | null>(null)
+const catTo = ref<Date | null>(null)
+const categoryRevenue = ref<CategoryRevenue[]>([])
+const loadingCategoryRevenue = ref(false)
+
+async function runCategoryRevenue() {
+  loadingCategoryRevenue.value = true
+  try {
+    categoryRevenue.value = await statisticsApi.categoryRevenue({
+      from: catFrom.value ? fmt(catFrom.value) : undefined,
+      to: catTo.value ? fmt(catTo.value, true) : undefined,
+    })
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Помилка', detail: describeError(e, 'Не вдалося виконати запит'), life: 4000 })
+  } finally {
+    loadingCategoryRevenue.value = false
+  }
+}
+
+const cashierPromos = ref<CashierPromo[]>([])
+const loadingCashierPromos = ref(false)
+const cashierPromosRan = ref(false)
+
+async function runCashierPromos() {
+  loadingCashierPromos.value = true
+  try {
+    cashierPromos.value = await statisticsApi.cashiersSoldAllPromos()
+    cashierPromosRan.value = true
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Помилка', detail: describeError(e, 'Не вдалося виконати запит'), life: 4000 })
+  } finally {
+    loadingCashierPromos.value = false
+  }
+}
+
 const cashierOptions = () => cashiers.value.map((c) => ({ label: `${c.surname} ${c.firstname}`, value: c.employeeId }))
 const categoryOptions = () => categories.value.map((c) => ({ label: c.categoryName, value: c.categoryNumber }))
 const fullName = (b: CategoryBuyer) => `${b.surname} ${b.firstname}`
+const promoFullName = (b: CashierPromo) => `${b.surname} ${b.firstname}`
 
 onMounted(async () => {
   cashiers.value = await employeesApi.getCashiers().catch(() => [])
   categories.value = await categoriesApi.getAll().catch(() => [])
   await runRevenue()
+  await runCategoryRevenue()
 })
 </script>
 
@@ -129,6 +164,48 @@ onMounted(async () => {
             <template #body="{ data }">{{ fullName(data) }}</template>
           </Column>
           <template #empty>Жоден клієнт не придбав усі товари цієї категорії.</template>
+        </DataTable>
+      </template>
+    </Card>
+    <Card class="block">
+      <template #title>Виторг за категоріями</template>
+      <template #subtitle>
+        Загальний виторг по кожній категорії товарів за обраний період.
+        Фільтри (період) — опціональні.
+      </template>
+      <template #content>
+        <div class="toolbar">
+          <DatePicker v-model="catFrom" date-format="yy-mm-dd" placeholder="Від" show-icon />
+          <DatePicker v-model="catTo" date-format="yy-mm-dd" placeholder="До" show-icon />
+          <Button label="Сформувати" icon="pi pi-chart-pie" @click="runCategoryRevenue" />
+        </div>
+
+        <DataTable :value="categoryRevenue" :loading="loadingCategoryRevenue" paginator :rows="10" striped-rows class="mt">
+          <Column field="categoryName" header="Категорія" sortable />
+          <Column field="totalRevenue" header="Виторг, грн" sortable>
+            <template #body="{ data }">{{ data.totalRevenue.toFixed(2) }}</template>
+          </Column>
+          <template #empty>Немає даних за вибраними умовами.</template>
+        </DataTable>
+      </template>
+    </Card>
+
+    <Card class="block">
+      <template #title>Касири, що продали всі акційні товари</template>
+      <template #subtitle>
+        Касири, для яких немає жодного акційного товару, що вони жодного разу не продавали.
+      </template>
+      <template #content>
+        <div class="toolbar">
+          <Button label="Сформувати" icon="pi pi-tag" @click="runCashierPromos" />
+        </div>
+
+        <DataTable v-if="cashierPromosRan" :value="cashierPromos" :loading="loadingCashierPromos" paginator :rows="10" striped-rows class="mt">
+          <Column field="employeeId" header="ID" sortable />
+          <Column header="ПІБ" sortable field="surname">
+            <template #body="{ data }">{{ promoFullName(data) }}</template>
+          </Column>
+          <template #empty>Жоден касир не продав усі акційні товари.</template>
         </DataTable>
       </template>
     </Card>

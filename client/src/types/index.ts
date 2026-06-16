@@ -138,3 +138,14 @@ export interface CategoryBuyer {
   surname: string
   firstname: string
 }
+
+export interface CategoryRevenue {
+  categoryName: string
+  totalRevenue: number
+}
+
+export interface CashierPromo {
+  employeeId: string
+  surname: string
+  firstname: string
+}

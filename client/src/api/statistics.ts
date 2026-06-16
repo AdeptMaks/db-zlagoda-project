@@ -1,8 +1,13 @@
 import api from './client'
-import type { CategoryBuyer, ProductRevenue } from '@/types'
+import type { CategoryBuyer, CategoryRevenue, CashierPromo, ProductRevenue } from '@/types'
 
 export interface ProductRevenueFilter {
   employeeId?: string
+  from?: string
+  to?: string
+}
+
+export interface DateRangeFilter {
   from?: string
   to?: string
 }
@@ -14,4 +19,8 @@ export const statisticsApi = {
     api
       .get<CategoryBuyer[]>('/statistics/category-buyers', { params: { categoryNumber } })
       .then((r) => r.data),
+  categoryRevenue: (params?: DateRangeFilter) =>
+    api.get<CategoryRevenue[]>('/statistics/category-revenue', { params }).then((r) => r.data),
+  cashiersSoldAllPromos: () =>
+    api.get<CashierPromo[]>('/statistics/cashiers-sold-all-promos').then((r) => r.data),
 }

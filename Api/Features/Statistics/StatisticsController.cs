@@ -23,4 +23,16 @@ public class StatisticsController : ControllerBase
         [FromQuery] int categoryNumber,
         [FromServices] IStatisticsRepository repository)
         => Ok(await repository.GetCategoryBuyers(categoryNumber));
+
+    [HttpGet("category-revenue")]
+    public async Task<IActionResult> CategoryRevenue(
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to,
+        [FromServices] IStatisticsRepository repository)
+        => Ok(await repository.GetCategoryRevenue(from, to));
+
+    [HttpGet("cashiers-sold-all-promos")]
+    public async Task<IActionResult> CashiersSoldAllPromos(
+        [FromServices] IStatisticsRepository repository)
+        => Ok(await repository.GetCashiersWhoSoldAllPromos());
 }
