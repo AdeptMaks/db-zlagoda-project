@@ -42,6 +42,7 @@ builder.Services.AddScoped<IStoreProductRepository>(_ => new StoreProductReposit
 builder.Services.AddScoped<ICustomerCardRepository>(_ => new CustomerCardRepository(connectionString));
 builder.Services.AddScoped<IStoreCheckRepository>(_ => new StoreCheckRepository(connectionString));
 builder.Services.AddScoped<ISaleRepository>(_ => new SaleRepository(connectionString));
+builder.Services.AddScoped<IStatisticsRepository>(_ => new StatisticsRepository(connectionString));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddSingleton<IGenerateJWT, JwtGenerator>();
