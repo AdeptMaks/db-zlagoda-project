@@ -131,7 +131,7 @@ onMounted(async () => {
           placeholder="Усі категорії" show-clear @change="load" />
         <IconField>
           <InputIcon class="pi pi-search" />
-          <InputText v-model="search" placeholder="Пошук за назвою" />
+          <InputText v-model="search" placeholder="Знайти за назвою" />
         </IconField>
         <Button v-if="auth.isManager" label="Друк" icon="pi pi-print" severity="secondary" outlined @click="printAll" />
         <Button v-if="auth.isManager" label="Додати" icon="pi pi-plus" @click="openCreate" />
