@@ -10,6 +10,11 @@ public class CategoryRepository(string connectionString) : BaseRepository(connec
             category_number AS CategoryNumber,
             category_name   AS CategoryName
         FROM category
+        ORDER BY category_name
+    ";
+
+    private const string NEXT_NUMBER_QUERY = @"
+        SELECT COALESCE(MAX(category_number), 0) + 1 FROM category
     ";
 
     private const string GET_BY_ID_QUERY = @"
@@ -40,6 +45,9 @@ public class CategoryRepository(string connectionString) : BaseRepository(connec
 
     public async Task<CategoryEntity?> GetById(int id)
         => await QuerySingleAsync<CategoryEntity>(GET_BY_ID_QUERY, new { CategoryNumber = id });
+
+    public async Task<int> GetNextNumber()
+        => await QuerySingleAsync<int>(NEXT_NUMBER_QUERY);
 
     public async Task Create(CategoryEntity input)
         => await ExecuteAsync(CREATE_QUERY, input);
