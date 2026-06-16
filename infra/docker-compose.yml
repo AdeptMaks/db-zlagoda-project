@@ -42,5 +42,15 @@ services:
     profiles:
       - migrate
 
+  client:
+    build:
+      context: ../client
+      dockerfile: Dockerfile
+      target: client
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
 volumes:
   postgres_data:

@@ -23,10 +23,15 @@ public class StoreProductController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> Get(
-        [FromQuery] string sort,
+        [FromQuery] string? sort,
         [FromQuery] bool? promotional,
         [FromServices] IStoreProductRepository repository)
     {
+        if (string.IsNullOrWhiteSpace(sort))
+        {
+            sort = "name";
+        }
+
         if (promotional.HasValue)
             return Ok(await repository.GetByPromotional(promotional.Value, sort));
         return Ok(await repository.GetAllDetailed(sort));
