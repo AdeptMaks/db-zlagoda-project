@@ -25,7 +25,9 @@ public static class AuthExtensions
                 {
                     OnMessageReceived = context =>
                     {
-                        context.Token = context.Request.Cookies["AuthToken"];
+                        var cookieToken = context.Request.Cookies["AuthToken"];
+                        if (!string.IsNullOrEmpty(cookieToken))
+                            context.Token = cookieToken;
 
                         return Task.CompletedTask;
                     }

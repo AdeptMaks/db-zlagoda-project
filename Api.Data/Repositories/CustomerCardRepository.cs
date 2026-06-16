@@ -5,7 +5,7 @@ namespace Api.Data.Repositories;
 
 public class CustomerCardRepository(string connectionString) : BaseRepository(connectionString), ICustomerCardRepository
 {
-    private const string GET_ALL_QUERY = @"
+    private const string BASE_SELECT = @"
         SELECT
             card_number     AS CardNumber,
             cust_surname    AS Surname,
@@ -19,19 +19,19 @@ public class CustomerCardRepository(string connectionString) : BaseRepository(co
         FROM customer_card
     ";
 
-    private const string GET_BY_ID_QUERY = @"
-        SELECT
-            card_number     AS CardNumber,
-            cust_surname    AS Surname,
-            cust_name       AS Firstname,
-            cust_patronymic AS Patronymic,
-            phone_number    AS PhoneNumber,
-            city            AS City,
-            street          AS Street,
-            zip_code        AS ZipCode,
-            percent         AS Percent
+    private const string GET_ALL_QUERY = $"{BASE_SELECT} ORDER BY cust_surname";
+
+    private const string SEARCH_BY_SURNAME_QUERY =
+        $"{BASE_SELECT} WHERE cust_surname ILIKE '%' || @Surname || '%' ORDER BY cust_surname";
+
+    private const string GET_BY_PERCENT_QUERY =
+        $"{BASE_SELECT} WHERE percent = @Percent ORDER BY cust_surname";
+
+    private const string GET_BY_ID_QUERY = $"{BASE_SELECT} WHERE card_number = @CardNumber";
+
+    private const string NEXT_NUMBER_QUERY = @"
+        SELECT 'CARD' || LPAD((COALESCE(MAX(CAST(SUBSTRING(card_number FROM 5) AS INTEGER)), 0) + 1)::text, 9, '0')
         FROM customer_card
-        WHERE card_number = @CardNumber
     ";
 
     private const string CREATE_QUERY = @"
@@ -63,8 +63,17 @@ public class CustomerCardRepository(string connectionString) : BaseRepository(co
     public async Task<IEnumerable<CustomerCardEntity>> GetAll()
         => await QueryAsync<CustomerCardEntity>(GET_ALL_QUERY);
 
+    public async Task<IEnumerable<CustomerCardEntity>> SearchBySurname(string surname)
+        => await QueryAsync<CustomerCardEntity>(SEARCH_BY_SURNAME_QUERY, new { Surname = surname });
+
+    public async Task<IEnumerable<CustomerCardEntity>> GetByPercent(int percent)
+        => await QueryAsync<CustomerCardEntity>(GET_BY_PERCENT_QUERY, new { Percent = percent });
+
     public async Task<CustomerCardEntity?> GetById(string id)
         => await QuerySingleAsync<CustomerCardEntity>(GET_BY_ID_QUERY, new { CardNumber = id });
+
+    public async Task<string> GetNextCardNumber()
+        => await QuerySingleAsync<string>(NEXT_NUMBER_QUERY) ?? "CARD000000001";
 
     public async Task Create(CustomerCardEntity input)
         => await ExecuteAsync(CREATE_QUERY, input);

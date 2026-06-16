@@ -32,11 +32,22 @@ public class AuthService(IGenerateJWT generator, IEmployeeRepository employeeRep
 
     public async Task<Response<string>> AuthorizeEmployee(LoginRequest input)
     {
-        // validation logic
-        // we need to validate password and login and then return jwt token with role taken from the db
+        var errors = new Dictionary<string, string[]>
+        {
+            ["Credentials"] = ["Invalid username or password"]
+        };
 
-        var role = EmpoloyeeRole.Cachier;
-        var token = generator.Generate(input.Username, role);
+        var employee = await employeeRepository.GetByUsername(input.Username);
+        if (employee is null)
+            return Response<string>.Failure(errors);
+
+        if (!passwordHasher.Check(input.Password, employee.Password))
+            return Response<string>.Failure(errors);
+
+        if (!Enum.TryParse<EmpoloyeeRole>(employee.EmployeeRole, out var role))
+            return Response<string>.Failure(errors);
+
+        var token = generator.Generate(employee.Username, role);
 
         return Response<string>.Success(token);
     }

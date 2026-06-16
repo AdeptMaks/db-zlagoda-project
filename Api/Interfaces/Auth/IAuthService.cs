@@ -6,4 +6,5 @@ namespace Api.Interfaces.Auth;
 public interface IAuthService
 {
     Task<Response<string>> RegisterEmployee(CreateEmployeeRequest input);
+    Task<Response<string>> AuthorizeEmployee(LoginRequest input);
 }

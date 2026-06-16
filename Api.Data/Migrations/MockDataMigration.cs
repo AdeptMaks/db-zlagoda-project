@@ -13,10 +13,11 @@ public class MockDataMigration : Migration
     public override void Up()
     {
         Execute.Sql(@"
-        INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, empl_role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code)
-        VALUES 
-            ('EMP0000001', 'Гаврасієнко', 'Максим', 'Олегович', 'Manager', 65000.0000, '1998-05-15', '2023-09-01', '+380501112233', 'Київ', 'вул. Волоська', '04070'),
-            ('EMP0000002', 'Костинюк', 'Максим', 'Віталійович', 'Manager', 65000.0000, '1999-08-22', '2023-09-15', '+380671112233', 'Київ', 'вул. Спаська', '04071');
+        INSERT INTO employee (id_employee, username, password, empl_surname, empl_name, empl_patronymic, empl_role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code)
+        VALUES
+            ('EMP0000001', 'manager0001', '100000.BveHIhE6PKN0udl6fNkdNQ==.2HJzf9jcbsVIuqCoDFc5559GXCOQ5feb9YcbbNCfnQo=', 'Гаврасієнко', 'Максим', 'Олегович', 'Manager', 65000.0000, '1998-05-15', '2023-09-01', '+380501112233', 'Київ', 'вул. Волоська', '04070'),
+            ('EMP0000002', 'manager0002', '100000.WW6IprSPLNMCy2jZ2rAnqA==.Yz2OVjAA44EslZT2auXmjdFW+7x5SIwrk0T6PwFH4hM=', 'Костинюк', 'Максим', 'Віталійович', 'Manager', 65000.0000, '1999-08-22', '2023-09-15', '+380671112233', 'Київ', 'вул. Спаська', '04071'),
+            ('EMP0000003', 'cashier0001', '100000.poIT08MGvsXtVlZTzIvAjg==.nf8wCwahGykwS5TOyGb7jNazoSiwK8L4NHGfm+r08g8=', 'Іваненко', 'Олег', 'Петрович', 'Cachier', 25000.0000, '2001-03-10', '2024-02-01', '+380631114455', 'Київ', 'вул. Ярославська', '04071');
         ");
 
         Execute.Sql(@"
@@ -121,9 +122,6 @@ public class MockDataMigration : Migration
             ('UPC000000009', 'CHK0000009', 2, 48.0000), 
             ('UPC000000012', 'CHK0000010', 3, 44.1600);
         ");
-
-
-
 
     }
 }
