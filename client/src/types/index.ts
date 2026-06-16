@@ -126,3 +126,15 @@ export interface SaleDetails {
 export interface CheckDetails extends StoreCheck {
   items: SaleDetails[]
 }
+
+export interface ProductRevenue {
+  productName: string
+  totalQuantity: number
+  totalRevenue: number
+}
+
+export interface CategoryBuyer {
+  cardNumber: string
+  surname: string
+  firstname: string
+}

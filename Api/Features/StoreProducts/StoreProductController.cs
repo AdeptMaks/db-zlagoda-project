@@ -23,7 +23,7 @@ public class StoreProductController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> Get(
-        [FromQuery] string sort,
+        [FromQuery] string? sort,
         [FromQuery] bool? promotional,
         [FromServices] IStoreProductRepository repository)
     {

@@ -23,6 +23,7 @@ const allItems: NavItem[] = [
   { label: 'Категорії', icon: 'pi pi-tags', route: '/categories', roles: ['Manager'] },
   { label: 'Карти клієнтів', icon: 'pi pi-id-card', route: '/customer-cards' },
   { label: 'Чеки', icon: 'pi pi-receipt', route: '/checks' },
+  { label: 'Статистика', icon: 'pi pi-chart-bar', route: '/statistics', roles: ['Manager'] },
 ]
 
 const menuItems = computed(() =>
